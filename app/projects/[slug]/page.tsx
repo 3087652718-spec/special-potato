@@ -102,7 +102,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               },
               {
                 title: "移动与场景适配细节",
-                description: "采用低重心布局与全地形静音轮组，从容应对机构内的无障碍坡道与狭窄走廊。深灰色的防撞底盘内嵌多模态传感器矩阵，实现毫秒级动态避障，确保满载药物时的绝对平稳与安全巡航。",
+                description: "采用低重心布局与静音轮组，适应机构内的无障碍坡道与狭窄走廊。深灰色防撞底盘结合前向感知区域，辅助设备在移动配送过程中保持稳定路径与安全距离。",
                 image: "/images/projects/medicine-robot/detail-04.webp"
               }
             ]
