@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #07080a;
+  --paper: #f7f7f5;
+  --muted: rgba(255, 255, 255, 0.62);
+  --blue: #1478ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--ink);
+}
+
+body {
+  margin: 0;
+  min-width: 1180px;
+  color: var(--paper);
+  background: var(--ink);
+  font-family: "Helvetica Neue", Helvetica, "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  letter-spacing: 0;
+}
+
+::selection {
+  color: white;
+  background: rgba(20, 120, 255, 0.74);
+}
+
+.portfolio-shell {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0) 720px),
+    var(--ink);
+}
+
+.container-wide {
+  width: min(1280px, calc(100% - 96px));
+  margin-inline: auto;
+}
+
+.placeholder-surface {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 72% 22%, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0) 28%),
+    linear-gradient(135deg, #161a20 0%, #e8e9e6 46%, #4c535e 100%);
+}
+
+.placeholder-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(135deg, rgba(0,0,0,0.85), rgba(0,0,0,0.08));
+}
+
+.placeholder-surface::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 16%;
+  height: 16%;
+  border-radius: 999px;
+  background: rgba(20, 120, 255, 0.16);
+  filter: blur(34px);
+}
+
+.placeholder-surface.has-image::after {
+  display: none;
+}
+
+.blue-line {
+  display: inline-block;
+  width: 48px;
+  height: 1px;
+  background: var(--blue);
+  box-shadow: 0 0 18px rgba(20, 120, 255, 0.5);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
