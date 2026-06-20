@@ -116,20 +116,20 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             title: "人在模式",
             label: "Ambient Light Mode",
             description:
-              "当用户在卧室、床头或客厅等场景中活动时，产品以柔和白暖光作为环境夜灯使用，弱化传统灭蚊器的工具感，使产品更自然地融入家居空间。",
+              "当用户在卧室、床头或客厅活动时，产品以柔和白暖光作为环境夜灯使用，弱化传统灭蚊器的工具感，使产品更自然地融入家居空间。",
             image: "/images/projects/mosquito/mode-ambient.webp",
             imageLabel: "人在模式场景图",
-            tags: ["白暖灯光", "家居氛围", "卧室 / 床头场景", "安静陪伴"]
+            tags: ["柔和暖光", "家居氛围", "安静陪伴", "人在环境"]
           },
           {
             index: "02",
             title: "无人灭蚊模式",
             label: "Mosquito Trapping Mode",
             description:
-              "当用户离开或进入休息状态后，产品切换为低干扰灭蚊工作模式，通过紫色诱蚊光与内部风道吸入结构完成灭蚊过程，减少蚊虫对睡眠和生活的干扰。",
+              "当用户离开卧室或检测到长时间无人活动时，产品切换为光诱灭蚊模式，通过隐藏式紫光与内部风道吸入结构完成捕蚊，减少紫光和风扇运行对人的直接干扰。",
             image: "/images/projects/mosquito/mode-trapping.webp",
             imageLabel: "无人灭蚊模式场景图",
-            tags: ["紫色诱蚊光", "风吸灭蚊", "无人环境", "低干扰运行"]
+            tags: ["隐藏式紫光", "风吸灭蚊", "无人环境", "低干扰运行"]
           }
         ]
       : null;
@@ -219,7 +219,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </div>
             <p className="text-sm text-white/48">{project.category}</p>
             <h1 className="mt-5 text-7xl font-semibold leading-[1.05] tracking-[-0.01em]">{project.name}</h1>
-            <p className="mt-8 text-lg leading-9 text-white/62">{project.overview}</p>
+            <p className="mt-8 text-lg leading-9 text-white/62">{project.slug === "mosquito" ? project.intro : project.overview}</p>
             <div className="mt-9 flex flex-wrap gap-3">
               {project.roles.map(role => (
                 <span key={role} className="rounded-full border border-white/12 px-4 py-2 text-xs text-white/58">
@@ -242,7 +242,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <ProjectInfoCard info={project.info} />
 
       <CaseStudySection eyebrow="OVERVIEW" title="项目概览">
-        <p>{project.overview}</p>
+        {project.overview.split("\n").map(paragraph => (
+          <p key={paragraph}>{paragraph}</p>
+        ))}
       </CaseStudySection>
 
       <CaseStudySection eyebrow="BACKGROUND" title="设计背景" dark>
@@ -488,7 +490,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     src={project.sceneVideo.src}
                     poster={project.sceneVideo.poster}
                     controls
-                    muted
                     loop
                     playsInline
                     preload="metadata"
@@ -521,7 +522,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                           src={project.renderVideo.src}
                           poster={publicAssetExists(project.renderVideo.poster) ? project.renderVideo.poster : undefined}
                           controls
-                          muted
                           loop
                           playsInline
                           preload="metadata"
@@ -564,7 +564,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                             src={video.src}
                             poster={publicAssetExists(video.poster) ? video.poster : undefined}
                             controls
-                            muted
                             loop
                             playsInline
                             preload="metadata"

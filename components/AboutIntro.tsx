@@ -34,7 +34,9 @@ export default function AboutIntro() {
             <p className="text-sm font-medium uppercase tracking-[0.18em] text-blue">Product Designer / Industrial Design Student</p>
             <h3 className="mt-5 text-5xl font-semibold">你好，我是罗景鸿</h3>
             <p className="mt-4 text-xl text-black/58">产品设计师 / 工业设计学生</p>
-            <p className="mt-8 max-w-3xl text-lg leading-9 text-black/64">
+            <p className="mt-6 max-w-3xl text-lg leading-[1.5] text-black/64">
+              <span className="text-black/72">广州美术学院产品设计专业大三学生</span>
+              <br />
               关注用户场景、产品造型、CMF 与 AI 辅助设计表达
             </p>
 
