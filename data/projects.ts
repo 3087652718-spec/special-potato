@@ -77,7 +77,7 @@ export const projects: Project[] = [
   {
     slug: "mosquito",
     index: "01",
-    name: "智能静音光诱灭蚊器",
+    name: "微光捕蚊器",
     category: "家电产品 / 智能硬件",
     intro: "面向卧室夜间使用场景的家居化灭蚊产品设计。",
     roles: ["用户分析", "造型设计", "CMF 设计", "产品渲染", "场景设计", "产品动画"],
@@ -89,11 +89,11 @@ export const projects: Project[] = [
       keywords: ["静音", "柔和光诱", "隐藏式捕蚊仓", "家居融合", "夜间友好"]
     },
     images: {
-      cover: "/images/projects/智能静音光诱灭蚊器/cover.webp",
-      render: "/images/projects/智能静音光诱灭蚊器/render.webp",
-      structure: "/images/projects/智能静音光诱灭蚊器/structure.webp",
-      cmf: "/images/projects/智能静音光诱灭蚊器/cmf.webp",
-      scene: "/images/projects/智能静音光诱灭蚊器/scene.webp"
+      cover: "/images/projects/微光捕蚊器/cover.webp",
+      render: "/images/projects/微光捕蚊器/render.webp",
+      structure: "/images/projects/微光捕蚊器/structure.webp",
+      cmf: "/images/projects/微光捕蚊器/cmf.webp",
+      scene: "/images/projects/微光捕蚊器/scene.webp"
     },
     renderVideo: {
       title: "渲染视频展示",

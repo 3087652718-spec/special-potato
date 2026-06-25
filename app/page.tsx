@@ -1,5 +1,4 @@
 import AboutIntro from "@/components/AboutIntro";
-import Contact from "@/components/Contact";
 import DesignPhilosophy from "@/components/DesignPhilosophy";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
@@ -14,7 +13,6 @@ export default function HomePage() {
       <ProjectGallery />
       <Skills />
       <DesignPhilosophy />
-      <Contact />
       <Footer />
     </main>
   );

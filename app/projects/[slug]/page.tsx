@@ -12,6 +12,12 @@ type ProjectPageProps = {
   params: Promise<{ slug: string }>;
 };
 
+type DetailCard = {
+  title: string;
+  description: string;
+  image: string;
+};
+
 function publicAssetExists(assetPath: string) {
   return existsSync(path.join(process.cwd(), "public", assetPath.replace(/^\//, "")));
 }
@@ -21,13 +27,99 @@ function isStructuredText(item: DetailText): item is Exclude<DetailText, string>
 }
 
 function detailTextKey(item: DetailText, index: number) {
-  return isStructuredText(item) ? `${item.title}-${index}` : item;
+  return isStructuredText(item) ? `${item.title}-${index}` : `${item}-${index}`;
 }
 
 function cmfGridClass(count: number) {
+  if (count <= 3) return "grid-cols-3";
   if (count === 4) return "grid-cols-2";
   return "grid-cols-3";
 }
+
+function getProductDetails(slug: string): { eyebrow: string; title: string; intro: string; cards: DetailCard[] } | null {
+  if (slug === "guide-robot") {
+    return {
+      eyebrow: "PRODUCT DETAILS",
+      title: "核心细节展示",
+      intro: "该模块聚焦导盲机器人在握持、感知、移动与安全反馈中的关键细节。",
+      cards: [
+        {
+          title: "握把交互",
+          description: "封闭式圆角矩形握把提供稳定抓握，顶部滚轮用于调节速度上限，内侧扳机按钮用于确认、暂停或紧急制动。",
+          image: "/images/projects/guide-robot/detail-01.webp"
+        },
+        {
+          title: "橙色安全手环",
+          description: "安全手环连接握持手腕与设备，降低脱手风险，并通过高识别度橙色强化关键安全部件的识别。",
+          image: "/images/projects/guide-robot/detail-02.webp"
+        },
+        {
+          title: "大直径防滑主轮",
+          description: "大直径主轮与防滑胎纹提升通过性，使产品在盲道、砖缝、坡道和轻微不平路面中保持稳定牵引。",
+          image: "/images/projects/guide-robot/detail-03.webp"
+        },
+        {
+          title: "黑色前脸感知区",
+          description: "黑色前脸区域整合前向环境识别能力，用于感知道路状态、前方障碍与通行风险。",
+          image: "/images/projects/guide-robot/detail-04.webp"
+        }
+      ]
+    };
+  }
+
+  if (slug === "medicine-robot") {
+    return {
+      eyebrow: "PRODUCT DETAILS",
+      title: "产品细节展示",
+      intro: "该模块聚焦送药机器人在护理院场景中的外观、交互、储药与移动适配细节。",
+      cards: [
+        {
+          title: "机身外观细节",
+          description: "展示机身整体造型、圆角过渡与体块关系，体现护理场景中的亲和感与安全感。",
+          image: "/images/projects/medicine-robot/detail-01.webp"
+        },
+        {
+          title: "交互界面细节",
+          description: "顶部交互界面整合身份核验与状态显示，以直觉化 UI 引导护理人员完成快速确认。",
+          image: "/images/projects/medicine-robot/detail-02.webp"
+        },
+        {
+          title: "药品存放与功能细节",
+          description: "独立储药格口辅助区分不同对象的药品，通过对应开启与状态灯提示降低错拿风险。",
+          image: "/images/projects/medicine-robot/detail-03.webp"
+        },
+        {
+          title: "移动与场景适配细节",
+          description: "低重心底盘与静音轮组适配护理院走廊、坡道和房间通行，提升移动配送过程的稳定性。",
+          image: "/images/projects/medicine-robot/detail-04.webp"
+        }
+      ]
+    };
+  }
+
+  return null;
+}
+
+const mosquitoModes = [
+  {
+    index: "01",
+    title: "人在模式",
+    label: "Ambient Light Mode",
+    description: "当用户在卧室、床头或客厅活动时，产品以柔和白暖光作为环境夜灯使用，使产品更自然地融入家居空间。",
+    image: "/images/projects/mosquito/mode-ambient.webp",
+    imageLabel: "人在模式场景图",
+    tags: ["柔和暖光", "家居氛围", "安静陪伴", "人在环境"]
+  },
+  {
+    index: "02",
+    title: "无人灭蚊模式",
+    label: "Mosquito Trapping Mode",
+    description: "当用户离开卧室或检测到长时间无人活动时，产品切换为光诱灭蚊模式，通过隐藏式紫光与内部风道吸入结构完成捕蚊。",
+    image: "/images/projects/mosquito/mode-trapping.webp",
+    imageLabel: "无人灭蚊模式场景图",
+    tags: ["隐藏式紫光", "风吸灭蚊", "无人环境", "低干扰运行"]
+  }
+];
 
 export function generateStaticParams() {
   return projects.map(project => ({ slug: project.slug }));
@@ -46,93 +138,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) notFound();
+
+  const productDetails = getProductDetails(project.slug);
   const modelVideos = project.modelVideos ?? [];
+  const useStackedCmfLayout = project.slug === "guide-robot" || project.slug === "medicine-robot";
   const cmfDescription =
     project.cmfDescription ?? "通过材质、色彩和结构分区控制产品气质，让方案具备更清晰的视觉秩序与落地表达。";
-  const useStackedCmfLayout = project.slug === "guide-robot" || project.slug === "medicine-robot";
-  const productDetails =
-    project.slug === "guide-robot"
-      ? {
-          title: "核心细节展示",
-          intro:
-            "该模块聚焦产品在握持、感知、提示与移动过程中的关键细节，通过握把、传感器、轮组与灯光反馈等局部设计，体现产品在人机牵引场景中的安全性与可用性。",
-          cards: [
-            {
-              title: "握把交互",
-              description: "封闭式圆角矩形握把提供稳定抓握，帮助视障用户建立清晰的牵引关系。顶部滚轮用于调节速度上限，内侧扳机按钮用于确认、暂停或紧急制动，减少复杂操作带来的使用负担。",
-              image: "/images/projects/guide-robot/detail-01.webp"
-            },
-            {
-              title: "橙色安全手环",
-              description: "安全手环套在握持手腕上，用于防止脱手，并在紧急情况下辅助触发停止。橙色高识别度主要面向陪同者、路人和维护人员，帮助他人快速理解这是关键安全部件。",
-              image: "/images/projects/guide-robot/detail-02.webp"
-            },
-            {
-              title: "大直径防滑主轮",
-              description: "大直径主轮提供稳定驱动力与地面通过能力。防滑胎纹增强抓地表现，使产品在盲道、人行道接缝、砖缝和轻微不平整路面中保持稳定牵引。",
-              image: "/images/projects/guide-robot/detail-03.webp"
-            },
-            {
-              title: "黑色前脸感知区",
-              description: "黑色前脸感知区集成前向环境识别能力，用于感知道路状态、前方障碍与通行风险，为自动避障、通路判断和安全引导提供基础。",
-              image: "/images/projects/guide-robot/detail-04.webp"
-            }
-          ]
-        }
-      : project.slug === "medicine-robot"
-        ? {
-            title: "产品细节展示",
-            intro:
-              "该模块聚焦产品在护理院场景中的使用细节，通过机身圆角、交互界面、移动结构、状态提示与药品存放区域等设计，体现产品的安全性、亲和感与护理场景适配性。",
-            cards: [
-              {
-                title: "机身外观细节",
-                description: "展示机身整体造型、圆角过渡与体块关系，体现产品在护理场景中的亲和感与安全感。",
-                image: "/images/projects/medicine-robot/detail-01.webp"
-              },
-              {
-                title: "交互界面细节",
-                description: "搭载符合黄金人机仰角的智能中控台，深度整合人脸追踪与 NFC 射频识别。抛弃繁琐的层级菜单，以直觉化的极简 UI 界面引导护士完成秒级鉴权，用算力彻底接管人工记忆。",
-                image: "/images/projects/medicine-robot/detail-02.webp"
-              },
-              {
-                title: "药品存放与功能细节",
-                description: "内部构建严密的“一人一仓”独立锁控矩阵。当核验匹配后，仅唯一对应格口自动弹出，并联动高亮环境语义灯圈（通行绿/警示红），以零思考成本的“机械防呆”机制，阻断一切邻近格口错拿的可能。",
-                image: "/images/projects/medicine-robot/detail-03.webp"
-              },
-              {
-                title: "移动与场景适配细节",
-                description: "采用低重心布局与静音轮组，适应机构内的无障碍坡道与狭窄走廊。深灰色防撞底盘结合前向感知区域，辅助设备在移动配送过程中保持稳定路径与安全距离。",
-                image: "/images/projects/medicine-robot/detail-04.webp"
-              }
-            ]
-          }
-        : null;
-  const dualModes =
-    project.slug === "mosquito"
-      ? [
-          {
-            index: "01",
-            title: "人在模式",
-            label: "Ambient Light Mode",
-            description:
-              "当用户在卧室、床头或客厅活动时，产品以柔和白暖光作为环境夜灯使用，弱化传统灭蚊器的工具感，使产品更自然地融入家居空间。",
-            image: "/images/projects/mosquito/mode-ambient.webp",
-            imageLabel: "人在模式场景图",
-            tags: ["柔和暖光", "家居氛围", "安静陪伴", "人在环境"]
-          },
-          {
-            index: "02",
-            title: "无人灭蚊模式",
-            label: "Mosquito Trapping Mode",
-            description:
-              "当用户离开卧室或检测到长时间无人活动时，产品切换为光诱灭蚊模式，通过隐藏式紫光与内部风道吸入结构完成捕蚊，减少紫光和风扇运行对人的直接干扰。",
-            image: "/images/projects/mosquito/mode-trapping.webp",
-            imageLabel: "无人灭蚊模式场景图",
-            tags: ["隐藏式紫光", "风吸灭蚊", "无人环境", "低干扰运行"]
-          }
-        ]
-      : null;
 
   if (project.pdfPages?.length) {
     return (
@@ -145,11 +156,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 <span className="blue-line" />
                 <span className="text-xs uppercase tracking-[0.22em] text-white/45">PDF Proposal Preview</span>
               </div>
-
               <p className="text-sm text-white/52">{project.category}</p>
               <h1 className="mt-5 text-7xl font-semibold leading-[1.04] tracking-[-0.01em]">{project.name}</h1>
               <p className="mt-8 max-w-3xl text-lg leading-9 text-white/62">{project.intro}</p>
-
               <Link
                 href="/#projects"
                 className="hover-target mt-10 inline-flex rounded-full border border-white/18 px-6 py-3 text-sm font-medium text-white transition hover:border-blue hover:bg-blue"
@@ -314,7 +323,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <section className="bg-ink py-28 text-white">
         <div className="container-wide">
           <SectionReveal className="mb-14">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-blue">{productDetails ? "PRODUCT DETAILS" : "STRUCTURE DISPLAY"}</p>
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-blue">{productDetails ? productDetails.eyebrow : "STRUCTURE DISPLAY"}</p>
             <h2 className="max-w-3xl text-5xl font-semibold leading-tight">{productDetails ? productDetails.title : "产品结构展示"}</h2>
             <p className="mt-6 max-w-3xl text-lg leading-9 text-white/56">
               {productDetails ? productDetails.intro : "通过结构展示图、功能区域说明和关键细节标签，呈现方案的可落地性、使用逻辑与产品完成度。"}
@@ -329,7 +338,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     <div className="overflow-hidden rounded-[22px]">
                       <VisualPlaceholder
                         image={publicAssetExists(card.image) ? card.image : undefined}
-                        label="产品细节图"
+                        label={card.title}
                         showLabel={false}
                         className="h-[320px] transition duration-700 group-hover:scale-[1.025]"
                       />
@@ -359,10 +368,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <SectionReveal className="col-span-5 self-center" delay={0.12}>
                 <div className="border-y border-white/12 py-8">
                   <p className="text-lg leading-9 text-white/64">
-                    结构展示重点说明产品的功能分区、装配逻辑和细节处理方式，帮助评审快速理解方案如何从概念走向可制造表达。
+                    结构展示重点说明产品的功能分区、装配逻辑和细节处理方式，帮助快速理解方案如何从概念走向可制造表达。
                   </p>
                 </div>
-
                 <div className="mt-10 space-y-5">
                   {project.structureNotes.map((note, index) => (
                     <div key={note} className="group flex items-center gap-4 border-t border-white/12 pt-5">
@@ -372,7 +380,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     </div>
                   ))}
                 </div>
-
                 <div className="mt-10 grid grid-cols-2 gap-3">
                   {["分模线", "按键区域", "灯光区域", "进风口", "出风口", "电池仓"].map(detail => (
                     <span key={detail} className="rounded-full border border-white/12 px-4 py-2 text-xs text-white/54 transition hover:border-blue hover:text-white">
@@ -391,9 +398,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <SectionReveal className={useStackedCmfLayout ? "max-w-[900px]" : "col-span-5"}>
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-blue">CMF DESIGN</p>
             <h2 className="text-5xl font-semibold leading-tight">CMF 设计</h2>
-            <p className="mt-7 text-lg leading-9 text-black/60">
-              {cmfDescription}
-            </p>
+            <p className="mt-7 text-lg leading-9 text-black/60">{cmfDescription}</p>
           </SectionReveal>
           <SectionReveal className={useStackedCmfLayout ? "mt-14" : "col-span-7"} delay={0.12}>
             <div className={`grid gap-4 ${useStackedCmfLayout ? "grid-cols-3" : cmfGridClass(project.cmf.length)}`}>
@@ -406,33 +411,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   <h3 className="mt-5 text-xl font-semibold leading-snug">{item.name}</h3>
                   {item.material || item.position || item.craft || item.purpose ? (
                     <div className="mt-5 space-y-3 border-y border-black/8 py-4">
-                      {item.material ? (
-                        <div className="grid grid-cols-[48px_1fr] gap-3 text-sm leading-6">
-                          <span className="font-semibold text-blue">材质</span>
-                          <span className="text-black/68">{item.material}</span>
-                        </div>
-                      ) : null}
-                      {item.position ? (
-                        <div className="grid grid-cols-[48px_1fr] gap-3 text-sm leading-6">
-                          <span className="font-semibold text-blue">位置</span>
-                          <span className="text-black/68">{item.position}</span>
-                        </div>
-                      ) : null}
-                      {item.craft ? (
-                        <div className="grid grid-cols-[48px_1fr] gap-3 text-sm leading-6">
-                          <span className="font-semibold text-blue">工艺</span>
-                          <span className="text-black/68">{item.craft}</span>
-                        </div>
-                      ) : null}
-                      {item.purpose ? (
-                        <div className="grid grid-cols-[48px_1fr] gap-3 text-sm leading-6">
-                          <span className="font-semibold text-blue">目的</span>
-                          <span className="text-black/68">{item.purpose}</span>
-                        </div>
-                      ) : null}
+                      {item.material ? <InfoRow label="材质" value={item.material} /> : null}
+                      {item.position ? <InfoRow label="位置" value={item.position} /> : null}
+                      {item.craft ? <InfoRow label="工艺" value={item.craft} /> : null}
+                      {item.purpose ? <InfoRow label="目的" value={item.purpose} /> : null}
                     </div>
-                  ) : null}
-                  {item.material || item.position || item.craft || item.purpose ? null : (
+                  ) : (
                     <p className="mt-4 text-sm leading-7 text-black/56">{item.note}</p>
                   )}
                 </div>
@@ -445,13 +429,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <section className="bg-ink py-28 text-white">
         <div className="container-wide">
           <SectionReveal className="mb-12">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-blue">{dualModes ? "DUAL MODE DISPLAY" : "SCENARIO"}</p>
-            <h2 className="max-w-3xl text-5xl font-semibold leading-tight">{dualModes ? "双模式展示" : "场景展示"}</h2>
-            {!dualModes ? <p className="mt-6 max-w-3xl text-lg leading-9 text-white/62">{project.scene}</p> : null}
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-blue">{project.slug === "mosquito" ? "DUAL MODE DISPLAY" : "SCENARIO"}</p>
+            <h2 className="max-w-3xl text-5xl font-semibold leading-tight">{project.slug === "mosquito" ? "双模式展示" : "场景展示"}</h2>
+            {project.slug !== "mosquito" ? <p className="mt-6 max-w-3xl text-lg leading-9 text-white/62">{project.scene}</p> : null}
           </SectionReveal>
-          {dualModes ? (
+
+          {project.slug === "mosquito" ? (
             <div className="grid grid-cols-2 gap-8">
-              {dualModes.map((mode, index) => (
+              {mosquitoModes.map((mode, index) => (
                 <SectionReveal key={mode.index} delay={index * 0.1}>
                   <article className="hover-target group h-full overflow-hidden rounded-[34px] border border-white/10 bg-white/[0.035] p-5 transition duration-500 hover:-translate-y-1 hover:border-blue/55 hover:shadow-[0_30px_100px_rgba(20,120,255,0.13)]">
                     <div className="overflow-hidden rounded-[26px]">
@@ -492,7 +477,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     controls
                     loop
                     playsInline
-                    preload="metadata"
+                    preload="none"
                   />
                 </div>
               ) : (
@@ -510,7 +495,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-blue">{project.renderVideo.label}</p>
               <h2 className="max-w-3xl text-5xl font-semibold leading-tight">{project.renderVideo.title}</h2>
             </SectionReveal>
-
             <SectionReveal delay={0.12}>
               <div className="mx-auto max-w-6xl">
                 <div className="hover-target group overflow-hidden rounded-[36px] border border-black/10 bg-ink p-5 shadow-[0_32px_120px_rgba(0,0,0,0.16)] transition duration-500 hover:-translate-y-1 hover:border-blue/55 hover:shadow-[0_36px_130px_rgba(20,120,255,0.14)]">
@@ -524,16 +508,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                           controls
                           loop
                           playsInline
-                          preload="metadata"
+                          preload="none"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center">
-                          <div className="px-6 text-center">
-                            <div className="mx-auto mb-5 h-px w-24 bg-blue shadow-[0_0_24px_rgba(20,120,255,0.48)]" />
-                            <p className="text-xs uppercase tracking-[0.28em] text-white/38">{project.renderVideo.label}</p>
-                            <p className="mt-4 text-2xl font-semibold text-white">渲染视频待替换</p>
-                          </div>
-                        </div>
+                        <VideoPlaceholder label={project.renderVideo.label} title="渲染视频待替换" />
                       )}
                     </div>
                   </div>
@@ -551,7 +529,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-blue">MODEL DISPLAY</p>
               <h2 className="max-w-3xl text-5xl font-semibold leading-tight">模型展示</h2>
             </SectionReveal>
-
             <div className="grid grid-cols-2 items-center justify-center gap-10">
               {modelVideos.map((video, index) => (
                 <SectionReveal key={video.src} delay={0.1 + index * 0.08}>
@@ -566,16 +543,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                             controls
                             loop
                             playsInline
-                            preload="metadata"
+                            preload="none"
                           />
                         ) : (
-                          <div className="flex h-full items-center justify-center">
-                            <div className="px-6 text-center">
-                              <div className="mx-auto mb-5 h-px w-24 bg-blue shadow-[0_0_24px_rgba(20,120,255,0.48)]" />
-                              <p className="text-xs uppercase tracking-[0.28em] text-white/38">MODEL DISPLAY</p>
-                              <p className="mt-4 text-2xl font-semibold text-white">模型展示视频待替换</p>
-                            </div>
-                          </div>
+                          <VideoPlaceholder label="MODEL DISPLAY" title="模型展示视频待替换" />
                         )}
                       </div>
                     </div>
@@ -599,5 +570,26 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
       </CaseStudySection>
     </main>
+  );
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid grid-cols-[48px_1fr] gap-3 text-sm leading-6">
+      <span className="font-semibold text-blue">{label}</span>
+      <span className="text-black/68">{value}</span>
+    </div>
+  );
+}
+
+function VideoPlaceholder({ label, title }: { label: string; title: string }) {
+  return (
+    <div className="flex h-full items-center justify-center">
+      <div className="px-6 text-center">
+        <div className="mx-auto mb-5 h-px w-24 bg-blue shadow-[0_0_24px_rgba(20,120,255,0.48)]" />
+        <p className="text-xs uppercase tracking-[0.28em] text-white/38">{label}</p>
+        <p className="mt-4 text-2xl font-semibold text-white">{title}</p>
+      </div>
+    </div>
   );
 }

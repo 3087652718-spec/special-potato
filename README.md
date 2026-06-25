@@ -45,7 +45,7 @@ http://localhost:3000
 项目图片按项目名称放入对应文件夹：
 
 ```text
-public/images/projects/智能静音光诱灭蚊器/
+public/images/projects/微光捕蚊器/
 public/images/projects/养老院送药机器人/
 public/images/projects/智能导盲机器人/
 public/images/projects/房船船屋设计/
