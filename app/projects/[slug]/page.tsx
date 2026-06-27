@@ -3,9 +3,12 @@ import { notFound } from "next/navigation";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import CaseStudySection from "@/components/CaseStudySection";
+import MosquitoCaseStudyExact from "@/components/MosquitoCaseStudyExact";
+import ProductBoardCaseStudy from "@/components/ProductBoardCaseStudy";
 import ProjectInfoCard from "@/components/ProjectInfoCard";
 import SectionReveal from "@/components/SectionReveal";
 import VisualPlaceholder from "@/components/VisualPlaceholder";
+import { guideRobotBoardCaseStudy, medicineRobotBoardCaseStudy } from "@/data/boardCaseStudies";
 import { getProject, projects, type DetailText } from "@/data/projects";
 
 type ProjectPageProps = {
@@ -214,6 +217,18 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </section>
       </main>
     );
+  }
+
+  if (project.slug === "mosquito") {
+    return <MosquitoCaseStudyExact project={project} />;
+  }
+
+  if (project.slug === "guide-robot") {
+    return <ProductBoardCaseStudy caseStudy={guideRobotBoardCaseStudy} />;
+  }
+
+  if (project.slug === "medicine-robot") {
+    return <ProductBoardCaseStudy caseStudy={medicineRobotBoardCaseStudy} />;
   }
 
   return (
